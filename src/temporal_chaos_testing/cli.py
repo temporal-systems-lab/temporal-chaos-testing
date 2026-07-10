@@ -1,0 +1,90 @@
+from __future__ import annotations
+
+import argparse
+from dataclasses import dataclass
+from pathlib import Path
+import subprocess
+
+from . import __version__
+
+
+@dataclass(frozen=True)
+class Scenario:
+    name: str
+    description: str
+    risk: str
+    command: tuple[str, ...]
+
+
+def project_root() -> Path:
+    return Path(__file__).resolve().parents[2]
+
+
+def build_scenarios() -> dict[str, Scenario]:
+    root = project_root()
+    return {
+        "controlled-clock": Scenario(
+            name="controlled-clock",
+            description="inject a deterministic wall-clock rollback without mutating the host clock",
+            risk="safe-lab",
+            command=("python3", str(root / "chaos" / "controlled_clock_demo.py"))
+        ),
+        "faketime": Scenario(
+            name="faketime",
+            description="run the libfaketime demonstration in an isolated lab environment",
+            risk="lab-only",
+            command=("bash", str(root / "chaos" / "faketime_demo.sh"))
+        ),
+        "space": Scenario(
+            name="space",
+            description="run the SPICE time conversion demo with optional kernel download",
+            risk="lab-download",
+            command=("python3", str(root / "partie-aerospatiale" / "spice_time_demo.py"))
+        )
+    }
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="temporal-chaos", description="Temporal chaos testing launcher")
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    subparsers.add_parser("list", help="list available scenarios")
+    subparsers.add_parser("controlled-clock", help="run the deterministic rollback scenario")
+    subparsers.add_parser("faketime", help="run the libfaketime lab scenario")
+    space = subparsers.add_parser("space", help="run the SPICE scenario")
+    space.add_argument("--download", action="store_true", help="download missing kernels before running")
+    return parser
+
+
+def run_scenario(scenario: Scenario, extra_args: list[str] | None = None) -> int:
+    command = list(scenario.command)
+    if extra_args:
+        command.extend(extra_args)
+    completed = subprocess.run(command, check=False)
+    return completed.returncode
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    scenarios = build_scenarios()
+
+    if args.command == "list":
+        for scenario in scenarios.values():
+            print(f"{scenario.name}: {scenario.description} [{scenario.risk}]")
+        return 0
+    if args.command == "controlled-clock":
+        return run_scenario(scenarios["controlled-clock"])
+    if args.command == "faketime":
+        return run_scenario(scenarios["faketime"])
+    if args.command == "space":
+        extra_args = ["--download"] if args.download else []
+        return run_scenario(scenarios["space"], extra_args)
+
+    parser.error(f"unsupported command: {args.command}")
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
