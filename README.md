@@ -25,14 +25,14 @@ Règle de frontière :
 make verify
 PYTHONPATH=src python3 -m temporal_chaos_testing.cli list
 PYTHONPATH=src python3 -m temporal_chaos_testing.cli controlled-clock
-PYTHONPATH=src python3 -m temporal_chaos_testing.cli faketime
+PYTHONPATH=src python3 -m temporal_chaos_testing.cli faketime --ack-lab-risk
 ```
 
 La démonstration SPICE reste optionnelle :
 
 ```bash
 make demo-space
-PYTHONPATH=src python3 -m temporal_chaos_testing.cli space --download
+PYTHONPATH=src python3 -m temporal_chaos_testing.cli space --download --ack-network-download
 ```
 
 ## Structure

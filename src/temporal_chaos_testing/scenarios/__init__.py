@@ -1,0 +1,1 @@
+"""Runnable laboratory scenarios bundled with the installable package."""

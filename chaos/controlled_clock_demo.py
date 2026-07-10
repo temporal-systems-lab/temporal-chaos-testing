@@ -1,47 +1,15 @@
-"""Démonstration déterministe d'un recul d'horloge pendant une mesure.
+"""Compat wrapper for the packaged deterministic rollback scenario."""
 
-Cette démo évite de modifier l'horloge de l'hôte. Elle injecte deux horloges :
-une horloge murale programmable, qui recule, et une horloge monotone locale,
-qui continue d'avancer.
-"""
+from pathlib import Path
+import sys
 
-from __future__ import annotations
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
-
-class ControlledClock:
-    def __init__(self, value_ms: int):
-        self.value_ms = value_ms
-
-    def now_ms(self) -> int:
-        return self.value_ms
-
-    def advance_ms(self, delta_ms: int) -> None:
-        self.value_ms += delta_ms
-
-
-def simulate_step_back() -> tuple[int, int]:
-    wall = ControlledClock(10_000)
-    monotonic = ControlledClock(500)
-
-    wall_start = wall.now_ms()
-    mono_start = monotonic.now_ms()
-
-    monotonic.advance_ms(150)
-    wall.advance_ms(-2_000)
-
-    wall_elapsed = wall.now_ms() - wall_start
-    mono_elapsed = monotonic.now_ms() - mono_start
-
-    return wall_elapsed, mono_elapsed
-
-
-def main() -> None:
-    wall_elapsed, mono_elapsed = simulate_step_back()
-
-    print(f"durée wall-clock injectée : {wall_elapsed} ms")
-    print(f"durée monotone injectée   : {mono_elapsed} ms")
-    print("assertion : la durée métier doit venir de l'horloge monotone.")
+from temporal_chaos_testing.scenarios.controlled_clock import ControlledClock, main, simulate_step_back
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
