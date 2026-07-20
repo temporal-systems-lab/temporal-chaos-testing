@@ -5,7 +5,9 @@ environnement isolé.
 
 Ce dépôt isole les scénarios qui ne doivent pas être confondus avec le noyau
 pédagogique ni avec l'outillage d'audit read-only : injections `libfaketime`,
-horloges contrôlées et démonstration SPICE avec téléchargement de kernels.
+horloges contrôlées, holdover, leap smear incompatible, expiration de
+certificats, leases, JWT/TOTP, bascule de grandmaster PTP et démonstration
+SPICE avec téléchargement de kernels.
 
 ## Sécurité d'exécution
 
@@ -25,6 +27,9 @@ Règle de frontière :
 make verify
 PYTHONPATH=src python3 -m temporal_chaos_testing.cli list
 PYTHONPATH=src python3 -m temporal_chaos_testing.cli controlled-clock
+PYTHONPATH=src python3 -m temporal_chaos_testing.cli holdover
+PYTHONPATH=src python3 -m temporal_chaos_testing.cli leap-smear-mismatch
+PYTHONPATH=src python3 -m temporal_chaos_testing.cli ptp-grandmaster-failover
 PYTHONPATH=src python3 -m temporal_chaos_testing.cli faketime --ack-lab-risk
 ```
 
@@ -40,8 +45,21 @@ PYTHONPATH=src python3 -m temporal_chaos_testing.cli space --download --ack-netw
 | Chemin | Rôle |
 |---|---|
 | `src/temporal_chaos_testing/` | CLI légère de lancement et garde-fous |
+| `src/temporal_chaos_testing/scenarios/` | scénarios packagés pour wheel et CLI |
 | `chaos/` | démonstrations injectées et `libfaketime` |
 | `partie-aerospatiale/` | démonstration SPICE et documentation associée |
+
+## Scénarios prioritaires actuels
+
+- `controlled-clock` : rollback déterministe d'horloge civile sans mutation hôte.
+- `holdover` : perte de source et dérive locale en mode dégradé.
+- `leap-smear-mismatch` : incompatibilité entre UTC strict et lissage de seconde intercalaire.
+- `certificate-expiry` : dérive d'horloge et validation `notBefore` / `notAfter`.
+- `lease-pause` : pause longue, lease expirée et besoin de fencing token.
+- `jwt-totp-skew` : rejet de JWT/TOTP sous skew hors budget.
+- `ptp-grandmaster-failover` : perte de grandmaster, holdover et saut de phase.
+- `faketime` : laboratoire `libfaketime` en environnement isolé.
+- `space` : démonstration SPICE avec téléchargement optionnel.
 
 ## Validation
 

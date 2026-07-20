@@ -1,1 +1,1 @@
-"""Runnable laboratory scenarios bundled with the installable package."""
+"""Packaged temporal chaos scenarios.""""""Runnable laboratory scenarios bundled with the installable package."""

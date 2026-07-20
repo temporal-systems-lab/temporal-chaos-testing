@@ -9,14 +9,51 @@ class ChaosCliTests(unittest.TestCase):
     def test_scenario_registry_contains_expected_entries(self) -> None:
         scenarios = build_scenarios()
 
-        self.assertEqual(sorted(scenarios), ["controlled-clock", "faketime", "space"])
+        self.assertEqual(
+            sorted(scenarios),
+            [
+                "certificate-expiry",
+                "controlled-clock",
+                "faketime",
+                "holdover",
+                "jwt-totp-skew",
+                "leap-smear-mismatch",
+                "lease-pause",
+                "ptp-grandmaster-failover",
+                "space",
+            ],
+        )
 
     def test_python_scenarios_use_module_invocation(self) -> None:
         scenarios = build_scenarios()
 
         self.assertEqual(
+            scenarios["certificate-expiry"].command[1:],
+            ("-m", "temporal_chaos_testing.scenarios.certificate_expiry"),
+        )
+        self.assertEqual(
             scenarios["controlled-clock"].command[1:],
             ("-m", "temporal_chaos_testing.scenarios.controlled_clock"),
+        )
+        self.assertEqual(
+            scenarios["holdover"].command[1:],
+            ("-m", "temporal_chaos_testing.scenarios.holdover"),
+        )
+        self.assertEqual(
+            scenarios["jwt-totp-skew"].command[1:],
+            ("-m", "temporal_chaos_testing.scenarios.jwt_totp_skew"),
+        )
+        self.assertEqual(
+            scenarios["leap-smear-mismatch"].command[1:],
+            ("-m", "temporal_chaos_testing.scenarios.leap_smear_mismatch"),
+        )
+        self.assertEqual(
+            scenarios["lease-pause"].command[1:],
+            ("-m", "temporal_chaos_testing.scenarios.lease_pause"),
+        )
+        self.assertEqual(
+            scenarios["ptp-grandmaster-failover"].command[1:],
+            ("-m", "temporal_chaos_testing.scenarios.ptp_grandmaster_failover"),
         )
         self.assertEqual(
             scenarios["space"].command[1:],
