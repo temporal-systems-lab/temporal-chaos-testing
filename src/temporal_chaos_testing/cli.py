@@ -71,9 +71,9 @@ def build_scenarios() -> dict[str, Scenario]:
             risk="safe-lab",
             command=(python, "-m", "temporal_chaos_testing.scenarios.lease_pause")
         ),
-        "ptp-grandmaster-failover": Scenario(
-            name="ptp-grandmaster-failover",
-            description="simulate grandmaster loss, holdover, and phase step on PTP failover",
+        "pedagogical-grandmaster-failover": Scenario(
+            name="pedagogical-grandmaster-failover",
+            description="simulate pedagogical grandmaster loss, holdover, and phase step without claiming a full BMCA dataset",
             risk="safe-lab",
             command=(python, "-m", "temporal_chaos_testing.scenarios.ptp_grandmaster_failover")
         ),
@@ -111,7 +111,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_dry_run_argument(leap_smear)
     lease_pause = subparsers.add_parser("lease-pause", help="simulate stale lease holders after long pauses")
     add_dry_run_argument(lease_pause)
-    ptp_failover = subparsers.add_parser("ptp-grandmaster-failover", help="simulate holdover and PTP grandmaster failover")
+    ptp_failover = subparsers.add_parser("pedagogical-grandmaster-failover", help="simulate pedagogical holdover and grandmaster failover")
     add_dry_run_argument(ptp_failover)
     space = subparsers.add_parser("space", help="run the SPICE scenario")
     space.add_argument("--download", action="store_true", help="download missing kernels before running")
@@ -162,8 +162,8 @@ def main(argv: list[str] | None = None) -> int:
         return run_scenario(scenarios["leap-smear-mismatch"], dry_run=args.dry_run)
     if args.command == "lease-pause":
         return run_scenario(scenarios["lease-pause"], dry_run=args.dry_run)
-    if args.command == "ptp-grandmaster-failover":
-        return run_scenario(scenarios["ptp-grandmaster-failover"], dry_run=args.dry_run)
+    if args.command == "pedagogical-grandmaster-failover":
+        return run_scenario(scenarios["pedagogical-grandmaster-failover"], dry_run=args.dry_run)
     if args.command == "space":
         if args.download and not args.ack_network_download:
             parser.error("space --download requires --ack-network-download")

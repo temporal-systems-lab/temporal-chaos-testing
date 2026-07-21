@@ -29,7 +29,7 @@ PYTHONPATH=src python3 -m temporal_chaos_testing.cli list
 PYTHONPATH=src python3 -m temporal_chaos_testing.cli controlled-clock
 PYTHONPATH=src python3 -m temporal_chaos_testing.cli holdover
 PYTHONPATH=src python3 -m temporal_chaos_testing.cli leap-smear-mismatch
-PYTHONPATH=src python3 -m temporal_chaos_testing.cli ptp-grandmaster-failover
+PYTHONPATH=src python3 -m temporal_chaos_testing.cli pedagogical-grandmaster-failover
 PYTHONPATH=src python3 -m temporal_chaos_testing.cli faketime --ack-lab-risk
 ```
 
@@ -62,7 +62,7 @@ PYTHONPATH=src python3 -m temporal_chaos_testing.cli space --download --ack-netw
 - `certificate-expiry` : dérive d'horloge et validation `notBefore` / `notAfter`.
 - `lease-pause` : pause longue, lease expirée et besoin de fencing token.
 - `jwt-totp-skew` : rejet de JWT/TOTP sous skew hors budget.
-- `ptp-grandmaster-failover` : perte de grandmaster, holdover et saut de phase.
+- `pedagogical-grandmaster-failover` : scénario pédagogique de perte de grandmaster, holdover et saut de phase, sans prétendre implémenter le dataset BMCA complet.
 - `faketime` : laboratoire `libfaketime` en environnement isolé.
 - `space` : démonstration SPICE avec téléchargement optionnel.
 
@@ -81,3 +81,5 @@ make demo-chaos
 ## Licence
 
 Code sous double licence MIT ou Apache-2.0.
+
+Les kernels publics NAIF archivés dans `partie-aerospatiale/kernels/` restent des artefacts tiers distincts du code du dépôt. Voir `THIRD_PARTY_NOTICES.md` pour leur origine, leurs checksums, leur date d'acquisition et la politique de redistribution retenue ici.

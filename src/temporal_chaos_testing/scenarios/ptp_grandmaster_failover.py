@@ -20,15 +20,15 @@ class FailoverOutcome:
     degraded: bool
 
 
-def choose_best_master(candidates: list[GrandmasterSnapshot]) -> GrandmasterSnapshot:
+def choose_pedagogical_master(candidates: list[GrandmasterSnapshot]) -> GrandmasterSnapshot:
     return min(candidates, key=lambda item: (item.priority1, item.clock_class, abs(item.offset_ns), item.name))
 
 
-def simulate_failover() -> FailoverOutcome:
+def simulate_pedagogical_failover() -> FailoverOutcome:
     primary = GrandmasterSnapshot(name="gm-a", priority1=128, clock_class=6, offset_ns=50)
     backup = GrandmasterSnapshot(name="gm-b", priority1=128, clock_class=7, offset_ns=820)
-    selected_before = choose_best_master([primary, backup])
-    selected_after = choose_best_master([backup])
+    selected_before = choose_pedagogical_master([primary, backup])
+    selected_after = choose_pedagogical_master([backup])
     holdover_ns = 300
     phase_step_ns = selected_after.offset_ns - selected_before.offset_ns
     degraded = abs(phase_step_ns) > 500
@@ -42,13 +42,13 @@ def simulate_failover() -> FailoverOutcome:
 
 
 def main() -> int:
-    outcome = simulate_failover()
+    outcome = simulate_pedagogical_failover()
     print(f"grandmaster initial   : {outcome.previous}")
     print(f"grandmaster de secours: {outcome.replacement}")
     print(f"holdover intermédiaire: {outcome.holdover_ns} ns")
     print(f"saut de phase         : {outcome.phase_step_ns} ns")
     print(f"qualité dégradée      : {outcome.degraded}")
-    print("assertion : un failover PTP doit propager une métrique de qualité, pas un faux temps parfait.")
+    print("assertion : ce scénario reste pédagogique et n'implémente pas le dataset BMCA complet ; il illustre surtout holdover, bascule et propagation d'une métrique de qualité.")
     return 0
 
 

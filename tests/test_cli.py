@@ -19,7 +19,7 @@ class ChaosCliTests(unittest.TestCase):
                 "jwt-totp-skew",
                 "leap-smear-mismatch",
                 "lease-pause",
-                "ptp-grandmaster-failover",
+                "pedagogical-grandmaster-failover",
                 "space",
             ],
         )
@@ -52,7 +52,7 @@ class ChaosCliTests(unittest.TestCase):
             ("-m", "temporal_chaos_testing.scenarios.lease_pause"),
         )
         self.assertEqual(
-            scenarios["ptp-grandmaster-failover"].command[1:],
+            scenarios["pedagogical-grandmaster-failover"].command[1:],
             ("-m", "temporal_chaos_testing.scenarios.ptp_grandmaster_failover"),
         )
         self.assertEqual(

@@ -38,6 +38,8 @@ SHA-256. Les kernels archivés localement dans `kernels/` permettent ensuite une
 exécution hors-ligne ; le script refuse de s'exécuter si les fichiers locaux ne
 correspondent pas aux checksums attendus.
 
+La provenance, les checksums archivés, la date d'acquisition et la politique de redistribution de ces kernels publics sont documentées dans `THIRD_PARTY_NOTICES.md` à la racine du dépôt.
+
 Le manifeste définit aussi une fenêtre pédagogique défendable et un cas de
 référence historique (`1979-01-09T12:00:00`). Le programme génère un
 meta-kernel valide (`\begindata` / `\begintext`), vérifie que la date choisie

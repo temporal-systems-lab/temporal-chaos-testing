@@ -9,7 +9,7 @@ from temporal_chaos_testing.scenarios.holdover import phase_error_ns, simulate_h
 from temporal_chaos_testing.scenarios.jwt_totp_skew import simulate_auth_skew
 from temporal_chaos_testing.scenarios.leap_smear_mismatch import linear_smear_offset_ms, simulate_mismatch
 from temporal_chaos_testing.scenarios.lease_pause import simulate_lease_pause
-from temporal_chaos_testing.scenarios.ptp_grandmaster_failover import GrandmasterSnapshot, choose_best_master, simulate_failover
+from temporal_chaos_testing.scenarios.ptp_grandmaster_failover import GrandmasterSnapshot, choose_pedagogical_master, simulate_pedagogical_failover
 
 
 MODULE_PATH = pathlib.Path(__file__).parents[1] / "chaos" / "controlled_clock_demo.py"
@@ -61,14 +61,14 @@ class ControlledClockTests(unittest.TestCase):
         self.assertFalse(outcome.totp_valid)
 
     def test_ptp_failover_selects_backup_and_marks_quality_degraded(self) -> None:
-        best = choose_best_master(
+        best = choose_pedagogical_master(
             [
                 GrandmasterSnapshot(name="gm-a", priority1=128, clock_class=6, offset_ns=50),
                 GrandmasterSnapshot(name="gm-b", priority1=128, clock_class=7, offset_ns=820),
             ]
         )
         self.assertEqual(best.name, "gm-a")
-        outcome = simulate_failover()
+        outcome = simulate_pedagogical_failover()
         self.assertEqual(outcome.replacement, "gm-b")
         self.assertTrue(outcome.degraded)
 

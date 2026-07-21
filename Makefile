@@ -15,7 +15,7 @@ verify-wheel:
 	@if python3 -c 'import ensurepip' >/dev/null 2>&1; then \
 		rm -rf $(DIST_DIR) $(WHEEL_VENV); \
 		python3 -m venv $(WHEEL_VENV); \
-		. $(WHEEL_VENV)/bin/activate && pip wheel --no-deps --wheel-dir $(DIST_DIR) . && pip install $(DIST_DIR)/*.whl && temporal-chaos list >/dev/null && temporal-chaos controlled-clock >/dev/null && temporal-chaos holdover >/dev/null && temporal-chaos leap-smear-mismatch >/dev/null && temporal-chaos certificate-expiry >/dev/null && temporal-chaos lease-pause >/dev/null && temporal-chaos jwt-totp-skew >/dev/null && temporal-chaos ptp-grandmaster-failover >/dev/null; \
+		. $(WHEEL_VENV)/bin/activate && pip wheel --no-deps --wheel-dir $(DIST_DIR) . && pip install $(DIST_DIR)/*.whl && temporal-chaos list >/dev/null && temporal-chaos controlled-clock >/dev/null && temporal-chaos holdover >/dev/null && temporal-chaos leap-smear-mismatch >/dev/null && temporal-chaos certificate-expiry >/dev/null && temporal-chaos lease-pause >/dev/null && temporal-chaos jwt-totp-skew >/dev/null && temporal-chaos pedagogical-grandmaster-failover >/dev/null; \
 	else \
 		echo "ensurepip unavailable; skipping wheel smoke test locally"; \
 	fi
@@ -28,7 +28,7 @@ demo-chaos:
 	PYTHONPATH=src python3 -m temporal_chaos_testing.cli certificate-expiry
 	PYTHONPATH=src python3 -m temporal_chaos_testing.cli lease-pause
 	PYTHONPATH=src python3 -m temporal_chaos_testing.cli jwt-totp-skew
-	PYTHONPATH=src python3 -m temporal_chaos_testing.cli ptp-grandmaster-failover
+	PYTHONPATH=src python3 -m temporal_chaos_testing.cli pedagogical-grandmaster-failover
 
 demo-space:
 	python3 partie-aerospatiale/spice_time_demo.py --download
