@@ -33,10 +33,15 @@ PYTHONPATH=src python3 -m temporal_chaos_testing.cli ptp-grandmaster-failover
 PYTHONPATH=src python3 -m temporal_chaos_testing.cli faketime --ack-lab-risk
 ```
 
-La démonstration SPICE reste optionnelle :
+La démonstration SPICE reste optionnelle, mais elle est désormais pilotée par
+un manifeste versionné, écrit un meta-kernel temporaire, vérifie les SHA-256,
+contrôle la fenêtre historique retenue et compare les sorties à une référence
+documentée :
 
 ```bash
 make demo-space
+make verify-space-offline
+make verify-space-online
 PYTHONPATH=src python3 -m temporal_chaos_testing.cli space --download --ack-network-download
 ```
 

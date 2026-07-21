@@ -1,7 +1,8 @@
-.PHONY: verify verify-python verify-wheel demo-chaos demo-space clean
+.PHONY: verify verify-python verify-wheel verify-space-offline verify-space-online demo-chaos demo-space clean
 
 DIST_DIR ?= dist
 WHEEL_VENV ?= .wheel-venv
+RUNTIME_PYTHONPATH := $(if $(PYTHONPATH),$(PYTHONPATH):)src
 
 verify: verify-python demo-chaos verify-wheel
 
@@ -31,6 +32,22 @@ demo-chaos:
 
 demo-space:
 	python3 partie-aerospatiale/spice_time_demo.py --download
+
+verify-space-offline:
+	PYTHONPATH=$(RUNTIME_PYTHONPATH) python3 -m unittest discover -s tests -p 'test_spice_demo.py' -v
+	@if python3 -c 'import spiceypy' >/dev/null 2>&1; then \
+		PYTHONPATH=$(RUNTIME_PYTHONPATH) python3 -m temporal_chaos_testing.scenarios.spice_time_demo; \
+	else \
+		echo "spiceypy not installed; skipping offline SPICE execution locally"; \
+	fi
+
+verify-space-online:
+	@if python3 -c 'import spiceypy' >/dev/null 2>&1; then \
+		rm -rf build/spice-online-kernels; \
+		PYTHONPATH=$(RUNTIME_PYTHONPATH) python3 -m temporal_chaos_testing.scenarios.spice_time_demo --download --kernel-dir build/spice-online-kernels; \
+	else \
+		echo "spiceypy not installed; skipping online SPICE execution locally"; \
+	fi
 
 clean:
 	rm -rf $(DIST_DIR) $(WHEEL_VENV)

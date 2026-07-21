@@ -4,8 +4,16 @@ __pycache__/
 .venv/
 .wheel-venv/
 dist/
+.spice-site/
+.spice-venv/
+build/
 
-partie-aerospatiale/kernels/
+partie-aerospatiale/kernels/*
+!partie-aerospatiale/kernels/
+!partie-aerospatiale/kernels/naif0012.tls
+!partie-aerospatiale/kernels/vg100051.tsc
+partie-aerospatiale/kernels/voyager1_time_demo.tm
+.get-pip.py
 
 *.log
 *.tmp

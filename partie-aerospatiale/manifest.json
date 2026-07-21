@@ -1,8 +1,17 @@
 {
   "project": "Temporal Chaos Testing - Aerospace Part",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "description": "Expérience reproductible de corrélation temporelle SPICE (UTC -> ET -> SCLK).",
+  "spacecraft": {
+    "name": "Voyager 1",
+    "spacecraft_id": -31,
+    "sclk_id": -31
+  },
+  "meta_kernel": {
+    "filename": "voyager1_time_demo.tm",
+    "description": "Meta-kernel généré depuis le manifeste pour charger les kernels archivés ou téléchargés."
+  },
   "kernels": [
     {
       "name": "naif0012.tls",
@@ -19,10 +28,26 @@
       "sha256": "036f5eeee519b6abae055b486e1d9e3c9531588d55ebd6da1956127baa03d1b7"
     }
   ],
-  "reference_outputs": {
-    "utc": "2026-07-09T12:00:00",
-    "et": 836913669.185,
-    "delta_et_utc": 69.185,
-    "sclk_vg1": "1/47657:33:000"
+  "coverage_policy": {
+    "defensible_window": {
+      "start_utc": "1977-09-05T00:00:00",
+      "end_utc": "1981-12-31T23:59:59",
+      "reason": "Fenêtre pédagogique placée dans la mission primaire Voyager 1 pour éviter une extrapolation contemporaine peu défendable."
+    }
+  },
+  "reference_case": {
+    "utc": "1979-01-09T12:00:00",
+    "rationale": "Cas historique dans la mission primaire Voyager 1, compatible avec les kernels publics archivés localement.",
+    "expected": {
+      "et_tdb_seconds_j2000": -661996749.816,
+      "et_minus_utc_seconds": 50.184172,
+      "sclk": "2/14739:18:217",
+      "roundtrip_ms": 21.140
+    },
+    "tolerances": {
+      "et_seconds": 0.001,
+      "et_minus_utc_seconds": 0.000001,
+      "roundtrip_ms": 0.001
+    }
   }
 }

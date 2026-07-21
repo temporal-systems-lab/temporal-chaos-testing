@@ -24,7 +24,8 @@ la sonde dérive, lui aussi.
 ## Démo
 
 `spice_time_demo.py` convertit UTC → ET → SCLK (Voyager 1) avec
-[spiceypy](https://github.com/AndrewAnnex/SpiceyPy) :
+[spiceypy](https://github.com/AndrewAnnex/SpiceyPy) en lisant
+`manifest.json` comme source de vérité :
 
 ```bash
 pip install spiceypy
@@ -33,16 +34,18 @@ python3 spice_time_demo.py
 ```
 
 Le premier appel télécharge les kernels publics NAIF manquants et vérifie leurs
-SHA-256. Les kernels ne sont pas versionnés dans Git ; le script refuse de
-s'exécuter si les fichiers locaux ne correspondent pas aux checksums attendus.
+SHA-256. Les kernels archivés localement dans `kernels/` permettent ensuite une
+exécution hors-ligne ; le script refuse de s'exécuter si les fichiers locaux ne
+correspondent pas aux checksums attendus.
 
-Cette démonstration illustre une chaîne de conversion et vérifie seulement que
-la valeur encodée appartient à une partition déclarée du kernel SCLK. Cette
-condition ne certifie ni la qualité de la corrélation, ni sa précision, ni sa
-validité opérationnelle à la date choisie. Le script accepte donc une date via
-`--utc`, mais son adéquation au kernel doit être validée par l'équipe de
-mission. La démonstration ne constitue pas un jeu complet de kernels et ne doit
-pas traiter de données scientifiques sans cette validation.
+Le manifeste définit aussi une fenêtre pédagogique défendable et un cas de
+référence historique (`1979-01-09T12:00:00`). Le programme génère un
+meta-kernel valide (`\begindata` / `\begintext`), vérifie que la date choisie
+reste dans cette fenêtre, contrôle la partition SCLK et compare les sorties à
+des valeurs de référence avec tolérances documentées. Cette condition ne
+certifie toujours ni la qualité opérationnelle complète d'une corrélation SCLK,
+ni l'adéquation d'un traitement scientifique réel ; elle rend simplement la
+démonstration reproductible et falsifiable.
 
 ## Références pour la rédaction de la partie
 
